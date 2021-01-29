@@ -7,4 +7,4 @@ Replacement cover for the front of the ICOM IC-900 UX Transceiver modules
     connector.
     
 There are now several user definable parameters in the "uxcover.scad" source to allow for easy
-    customization of the cover.
+    customization of the cover (see www.openscad.org to download OpenSCAD for your platform).
