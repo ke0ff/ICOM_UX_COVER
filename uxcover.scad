@@ -9,6 +9,9 @@
 //	comment out the light-pipe section and then un-comment the rectangular hole section to generate
 //	the original ICOM opening.
 //
+// Rev-007, 02/02/2021
+// Added "slope" to the main body.
+//
 // Rev-006, 02/01/2021
 // Parameterized much of the model and used "rulers" to confirm dimensions.
 // Added rounded and chamfered corners and inside re-inforcing structures.
@@ -43,8 +46,11 @@ shroud_height = 26.2 + delta_h;
 main_height = 14.05 + delta_h;
 main_length = 176.5+.58;
 main_width = 24.97;
+main_twidth = 24.0;
 mvoid_length = 172.21;
 mvoid_width = 19.74;
+slope = 1.4;
+slope2 = 1.6;
 
 shroud_length = 173.74;
 shroud_width = 22.68;
@@ -57,6 +63,8 @@ shroud_offsx = (main_length-shroud_length)/2; //1.65;
 shroud_offsy = (main_width-shroud_width)/2; //1.27;
 smchamrad = .985;
 chamrad = 1.97;
+chamrad2 = 1.97 - .4;
+trim = 0.41;
 foffsx = face_offsx+smchamrad;
 foffsy = face_offsy+smchamrad;
 
@@ -113,29 +121,27 @@ difference(){
 	    translate([face_offsx,face_width+face_offsy,1.95]) rotate([0,0,45]) cube([3.4,1.7,4.1], center = true);
 	    translate([-0.2,main_width,(29.1+delta_h)/2]) rotate([0,0,45]) cube([3.4,3,30+delta_h], center = true);
 	    translate([shroud_offsx,shroud_width+shroud_offsy,((shroud_height + main_height)+4)/2]) rotate([0,0,45]) cube([3,1.5,shroud_height - main_height - 3.99], center = true);
-	  }
+		}
 	  // corner #1 rounding
 	  translate([foffsx,foffsy,2]) cylinder(r=smchamrad, h=4, $fn=32, center = true);
-	  translate([chamrad,chamrad,4]) cylinder(r=chamrad, h=main_height, $fn=32, center = false);
+	  translate([chamrad,chamrad,4]) cylinder(r1=chamrad2, r2=chamrad, h=main_height, $fn=32, center = false);
 	  translate([shroud_offsx+1.2,shroud_offsy+1.2,((shroud_height + main_height)+4)/2]) rotate([0,0,45]) cube([1,2.2,shroud_height - main_height - 3.99], center = true);
 	  // corner #2 rounding
 	  translate([face_length-(foffsx - (2*face_offsx)),foffsy,2]) rotate([0,0,45]) cylinder(r=smchamrad, h=4, $fn=32, center = true);
-	  translate([main_length-chamrad,chamrad,4]) cylinder(r=chamrad, h=main_height, $fn=32, center = false);
+	  translate([main_length-chamrad,chamrad,4]) cylinder(r1=chamrad2, r2=chamrad, h=main_height, $fn=32, center = false);
 	  translate([shroud_length+shroud_offsx-1.2,shroud_offsy+1.2,((shroud_height + main_height)+4)/2]) rotate([0,0,45]) cube([2.2,1,shroud_height - main_height - 3.99], center = true);
 	  // corner #3 rounding
 	  translate([face_length-(foffsx - (2*face_offsx)),face_width-(foffsy - (2*face_offsy)),2]) rotate([0,0,45]) cylinder(r=smchamrad, h=4, $fn=32, center = true);
-	  translate([main_length-chamrad,main_width-chamrad,4]) cylinder(r=chamrad, h=main_height, $fn=32, center = false);
+	  translate([main_length-chamrad,main_width-chamrad,4]) cylinder(r1=chamrad2, r2=chamrad, h=main_height-0.02, $fn=32, center = false);
 	  translate([shroud_length+shroud_offsx-1.2,shroud_width+shroud_offsy-1.2,((shroud_height + main_height)+4)/2]) rotate([0,0,45]) cube([1,2.2,shroud_height - main_height - 3.99], center = true);
 	  // corner #4 rounding
 	  translate([foffsx,face_width-(foffsy - (2*face_offsy)),2]) rotate([0,0,45]) cylinder(r=smchamrad, h=4, $fn=32, center = true);
-	  translate([chamrad,main_width-chamrad,4]) cylinder(r=chamrad, h=main_height, $fn=32, center = false);
+	  translate([chamrad,main_width-(chamrad),4]) cylinder(r1=chamrad2, r2=chamrad, h=main_height, $fn=32, center = false);
 	  translate([shroud_offsx+1.2,shroud_width+shroud_offsy-1.2,((shroud_height + main_height)+4)/2]) rotate([0,0,45]) cube([2.2,1,shroud_height - main_height - 3.99], center = true);
 
-	  translate([-.7,7.43,12.45+delta_h]) cube([2.3,10.16,12.95]);		// end tab #1
-	  translate([175.5,7.43,12.45+delta_h]) cube([2.3,10.16,12.95]);	// end tab #2
 	  translate([59.06,0,4.1]) cube([1.52,24.51,7.1+delta_h]);			// re-enforcing rib #1
 	  translate([117.22,0,4.1]) cube([1.52,24.51,9.1+delta_h]);			// re-enforcing rib #2
-	  translate([153,12.99,2]) cube([10,10,11.19+delta_h]);				// light-pipe support
+	  translate([153,12.95,2]) cube([10,10,11.19+delta_h]);				// light-pipe support
 	  rotate([90,0,0]){
 		translate([.8,22.3+delta_h,-12.51]) cylinder(r=1.27, h=10.16, $fn=16, center = true);			// end tab detent #1
 	  }
@@ -160,6 +166,16 @@ difference(){
 			// --> End of rectangular LED hole
 		}
 	}
+	
+	// side slope 1
+	translate([-2,((main_width - main_twidth)/2)-.85,face_thick-0.1]) rotate([slope,0,0]) cube([main_length+5,1,main_height+1]); //
+	// side slope 3
+	translate([-2,main_width-(((main_width - main_twidth)/2)+.01),face_thick-0.1]) rotate([-slope,0,0]) cube([main_length+5,1,main_height+1]); //
+	// side slope 2
+	translate([-.49,((main_width - main_twidth)/2),face_thick-0.1]) rotate([0,-slope,0]) cube([1,main_width+5,main_height+1]); //
+	// side slope 4
+	translate([main_length-.49,((main_width - main_twidth)/2),face_thick-0.1]) rotate([0,slope,0]) cube([1,main_width+5,main_height+1]); //
+
 	translate([82,19.1,20+delta_h]) cube([13,4,8]);						// center tab clearance 1
 	translate([82,2,21+delta_h]) cube([13,4,8]);						// center tab clearance 2
 	translate([139.2,7,-.1]) cube([1.2,20,1.7]);						// decorative slot 1
@@ -196,4 +212,8 @@ difference(){
 	}
 
 //  translate([-10,-10,-10]) cube([50,50,50]);					// section cut (leave commented-out unless needed for debug)
+}
+union(){
+	translate([-.7,7.43,12.45+delta_h]) cube([2.3,10.16,12.95]);		// end tab #1
+	translate([175.5,7.43,12.45+delta_h]) cube([2.3,10.16,12.95]);	// end tab #2
 }
