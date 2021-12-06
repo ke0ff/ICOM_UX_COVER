@@ -8,5 +8,5 @@ Replacement cover for the front of the ICOM IC-900 UX Transceiver modules
     
 There are now several user definable parameters in the "uxcover.scad" source to allow for easy
     customization of the cover (see www.openscad.org to download OpenSCAD for your platform).
-    Primarilly, up to 10mm of additional can be added.  The dimensions have been updated and
-    the resulting fit is very good.
+    Primarilly, up to 10mm of additional height can be added.  The dimensions have been updated and
+    the resulting fit is very good on the print jobs obtained thus far.
